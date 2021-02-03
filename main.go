@@ -24,7 +24,8 @@ func main() {
 		return
 	}
 
-	dg.AddHandler(c.NotifyEveryoneCommand)
+	dg.AddHandler(c.StatsCommand)
+	dg.AddHandler(c.LibByNameCommand)
 
 	err = dg.Open()
 	if err != nil {
