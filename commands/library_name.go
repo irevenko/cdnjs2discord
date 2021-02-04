@@ -15,7 +15,7 @@ const (
 	libByNameURL = "https://api.cdnjs.com/libraries/"
 )
 
-// LibByNameCommand is a command which returns specefic library by name
+// LibByNameCommand is a command which returns specefic library
 func LibByNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore all messages created by the bot itself
 	if m.Author.ID == s.State.User.ID {
@@ -26,8 +26,19 @@ func LibByNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		command := strings.Trim(m.Content, " ")
 		args := strings.Split(command, " ")
 
+		if len(args) < 3 {
+			s.ChannelMessageSend(m.ChannelID, "⚠️ Command **lib** requires 1 argument (library name)")
+			return
+		}
+
 		resp, err := http.Get(libByNameURL + args[2])
 		h.HandleError(err)
+		defer resp.Body.Close()
+
+		if resp.StatusCode == 404 {
+			s.ChannelMessageSend(m.ChannelID, "❌ Library not found")
+			return
+		}
 
 		body, err := ioutil.ReadAll(resp.Body)
 		h.HandleError(err)
@@ -44,6 +55,16 @@ func LibByNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		libAuthor := specificLibResp.Author
 		libLatestLink := specificLibResp.LatestLink
 
-		s.ChannelMessageSend(m.ChannelID, libName+" "+libVersion+"\n"+libDesc+"\n"+libAuthor+"\n"+libLicense+"\n"+libLatestLink+"\n"+libSource+"\n"+libHomePage)
+		libMessage :=
+			"➡️ **Name:** " + libName + "\n" +
+				"🔖 **Version:** " + libVersion + "\n" +
+				"📜 **Description:** " + libDesc + "\n" +
+				"✒️ **Author:** " + libAuthor + "\n" +
+				"📑 **License:** " + libLicense + "\n" +
+				"🔗 **Link:** " + libLatestLink + "\n" +
+				"🗂 **Source Code:** " + libSource + "\n" +
+				"📍 **Home Page:** " + libHomePage
+
+		s.ChannelMessageSend(m.ChannelID, libMessage)
 	}
 }

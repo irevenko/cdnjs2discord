@@ -26,14 +26,16 @@ func StatsCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, "!cdn stats") {
 		resp, err := http.Get(statsURL)
 		h.HandleError(err)
+		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
 		h.HandleError(err)
 
 		var statsResp t.StatsResponse
 		json.Unmarshal(body, &statsResp)
+
 		librariesNumber := strconv.Itoa(statsResp.LibrariesNumber)
 
-		s.ChannelMessageSend(m.ChannelID, "📊 STATS 📊\n The total number of libraries available on cdnjs : "+"```yaml\n"+librariesNumber+"```")
+		s.ChannelMessageSend(m.ChannelID, "📊 *CDNJS STATS*\nThe total number of libraries available on CDNJS : "+"```yaml\n"+librariesNumber+"```")
 	}
 }

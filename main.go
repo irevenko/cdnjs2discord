@@ -26,6 +26,7 @@ func main() {
 
 	dg.AddHandler(c.StatsCommand)
 	dg.AddHandler(c.LibByNameCommand)
+	dg.AddHandler(c.HelpCommand)
 
 	err = dg.Open()
 	if err != nil {
