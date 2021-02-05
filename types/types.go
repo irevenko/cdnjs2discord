@@ -5,7 +5,13 @@ type StatsResponse struct {
 	LibrariesNumber int `json:"libraries"`
 }
 
-// StatsResponse - types for the https://api.cdnjs.com/stats
+// WhiteListResponse - types for the https://api.cdnjs.com/whitelist
+type WhiteListResponse struct {
+	Extensions []string          `json:"extensions"`
+	Categories map[string]string `json:"categories"`
+}
+
+// SpecificLibResponse - types for the https://api.cdnjs.com/libraries/:library
 type SpecificLibResponse struct {
 	Name       string `json:"name"`
 	LatestLink string `json:"latest"`
@@ -13,7 +19,7 @@ type SpecificLibResponse struct {
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	} `json:"authors"`
-	AutoUpdate []struct {
+	AutoUpdate struct {
 		Source string `json:"source"`
 		Target string `json:"target"`
 	} `json:"autoupdate"`

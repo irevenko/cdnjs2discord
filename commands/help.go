@@ -13,13 +13,15 @@ func HelpCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if strings.HasPrefix(m.Content, "!cdn help") {
-		helpHeader := "🧾 *HELP FOR THE CDNJS BOT*\n"
+	if strings.Trim(m.Content, " ") == "!cdn" || strings.Trim(m.Content, " ") == "!cdn help" {
+		helpHeader := "🆘 *HELP FOR THE CDNJS BOT*:\n"
+		helpHelp := "**!cdn help** or **!cdn** - displays help info\n"
 		statsHelp := "**!cdn stats** - returns cdnjs libraries number\n"
 		libHelp := "**!cdn lib** <*LIBRARY NAME*> - search for a specific lib\n"
+		whitelistHelp := "**!cdn whitelist** - returns cdnjs extension whitelist\n"
 		sourceHelp := "__Source Code__: https://github.com/irevenko/cdnjs2discord"
 
-		helpMsg := helpHeader + statsHelp + libHelp + sourceHelp
+		helpMsg := helpHeader + helpHelp + statsHelp + libHelp + whitelistHelp + sourceHelp
 
 		s.ChannelMessageSend(m.ChannelID, helpMsg)
 	}

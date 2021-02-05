@@ -49,22 +49,29 @@ func LibByNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		libName := specificLibResp.Name
 		libLicense := specificLibResp.License
 		libDesc := specificLibResp.Description
-		libSource := specificLibResp.Repository.URL
-		libHomePage := specificLibResp.HomePage
+		libSource := "<" + specificLibResp.Repository.URL + ">"
+		libHomePage := "<" + specificLibResp.HomePage + ">"
 		libVersion := specificLibResp.Version
 		libAuthor := specificLibResp.Author
-		libLatestLink := specificLibResp.LatestLink
+		libAssetLink := "<" + specificLibResp.LatestLink + ">"
+		keyWords := strings.Join(specificLibResp.KeyWords[:], ", ")
+		autoUpdate := specificLibResp.AutoUpdate.Source + " | " + specificLibResp.AutoUpdate.Target
+		cdnjsLink := "<" + "https://cdnjs.com/libraries/" + libName + ">"
 
+		libHeader := "ℹ️ *CDNJS LIB NAME RESULTS*:\n\n"
 		libMessage :=
-			"➡️ **Name:** " + libName + "\n" +
-				"🔖 **Version:** " + libVersion + "\n" +
-				"📜 **Description:** " + libDesc + "\n" +
-				"✒️ **Author:** " + libAuthor + "\n" +
-				"📑 **License:** " + libLicense + "\n" +
-				"🔗 **Link:** " + libLatestLink + "\n" +
-				"🗂 **Source Code:** " + libSource + "\n" +
-				"📍 **Home Page:** " + libHomePage
+			"➡️ **Name**: " + libName + "\n" +
+				"🔖 **Version**: " + libVersion + "\n" +
+				"📜 **Description**: " + libDesc + "\n" +
+				"📒 **Key words**: " + keyWords + "\n" +
+				"✒️ **Author**: " + libAuthor + "\n" +
+				"📑 **License**: " + libLicense + "\n" +
+				"♻️ **Auto Update**: " + autoUpdate + "\n" +
+				"🔗 **Asset Link**: " + libAssetLink + "\n" +
+				"⚓ **CDNJS Reference**: " + cdnjsLink + "\n" +
+				"🗂 **Source Code**: " + libSource + "\n" +
+				"📍 **Home Page**: " + libHomePage
 
-		s.ChannelMessageSend(m.ChannelID, libMessage)
+		s.ChannelMessageSend(m.ChannelID, libHeader+libMessage)
 	}
 }

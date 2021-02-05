@@ -24,9 +24,10 @@ func main() {
 		return
 	}
 
+	dg.AddHandler(c.HelpCommand)
 	dg.AddHandler(c.StatsCommand)
 	dg.AddHandler(c.LibByNameCommand)
-	dg.AddHandler(c.HelpCommand)
+	dg.AddHandler(c.WhiteListCommand)
 
 	err = dg.Open()
 	if err != nil {

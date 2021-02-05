@@ -23,7 +23,7 @@ func StatsCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if strings.HasPrefix(m.Content, "!cdn stats") {
+	if strings.Trim(m.Content, " ") == "!cdn stats" {
 		resp, err := http.Get(statsURL)
 		h.HandleError(err)
 		defer resp.Body.Close()
@@ -35,7 +35,8 @@ func StatsCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		json.Unmarshal(body, &statsResp)
 
 		librariesNumber := strconv.Itoa(statsResp.LibrariesNumber)
+		statsMsg := "📊 *CDNJS Stats*\nThe total number of libraries available on CDNJS: " + "```yaml\n" + librariesNumber + "```"
 
-		s.ChannelMessageSend(m.ChannelID, "📊 *CDNJS STATS*\nThe total number of libraries available on CDNJS : "+"```yaml\n"+librariesNumber+"```")
+		s.ChannelMessageSend(m.ChannelID, statsMsg)
 	}
 }
