@@ -36,3 +36,11 @@ type SpecificLibResponse struct {
 	Author   string   `json:"author"`
 	Versions []string `json:"versions"`
 }
+
+// SpecificLibVerResponse - types for the https://api.cdnjs.com/libraries/:library/:version
+type SpecificLibVerResponse struct {
+	Name     string   `json:"name"`
+	Version  string   `json:"version"`
+	RawFiles []string `json:"rawFiles"`
+	Files    []string `json:"files"`
+}

@@ -17,11 +17,12 @@ func HelpCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		helpHeader := "🆘 *HELP FOR THE CDNJS BOT*:\n"
 		helpHelp := "**!cdn help** or **!cdn** - displays help info\n"
 		statsHelp := "**!cdn stats** - returns cdnjs libraries number\n"
-		libHelp := "**!cdn lib** <*LIBRARY NAME*> - search for a specific lib\n"
+		libHelp := "**!cdn lib** <*LIBRARY NAME*> - returns specific lib\n"
+		assetsHelp := "**!cdn assets** <*NAME*> <*VERSION*> - returns assets for the specific lib version\n"
 		whitelistHelp := "**!cdn whitelist** - returns cdnjs extension whitelist\n"
-		sourceHelp := "__Source Code__: https://github.com/irevenko/cdnjs2discord"
+		sourceHelp := "__Bot Source Code__: https://github.com/irevenko/cdnjs2discord"
 
-		helpMsg := helpHeader + helpHelp + statsHelp + libHelp + whitelistHelp + sourceHelp
+		helpMsg := helpHeader + helpHelp + statsHelp + whitelistHelp + libHelp + assetsHelp + sourceHelp
 
 		s.ChannelMessageSend(m.ChannelID, helpMsg)
 	}

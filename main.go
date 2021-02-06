@@ -25,9 +25,17 @@ func main() {
 	}
 
 	dg.AddHandler(c.HelpCommand)
+	dg.AddHandler(c.LibCommand)
 	dg.AddHandler(c.StatsCommand)
-	dg.AddHandler(c.LibByNameCommand)
+	dg.AddHandler(c.AssetsCommand)
 	dg.AddHandler(c.WhiteListCommand)
+
+	dg.AddHandler(func(dg *discordgo.Session, ready *discordgo.Ready) {
+		err = dg.UpdateStatus(0, "!cdn")
+		if err != nil {
+			log.Fatal("Status error")
+		}
+	})
 
 	err = dg.Open()
 	if err != nil {
