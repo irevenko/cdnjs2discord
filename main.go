@@ -29,9 +29,10 @@ func main() {
 	dg.AddHandler(c.StatsCommand)
 	dg.AddHandler(c.AssetsCommand)
 	dg.AddHandler(c.WhiteListCommand)
+	dg.AddHandler(c.SearchNameCommand)
 
 	dg.AddHandler(func(dg *discordgo.Session, ready *discordgo.Ready) {
-		err = dg.UpdateStatus(0, "!cdn")
+		err = dg.UpdateGameStatus(0, "!cdn")
 		if err != nil {
 			log.Fatal("Status error")
 		}

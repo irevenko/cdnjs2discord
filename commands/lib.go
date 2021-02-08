@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	baseLibByNameURL = "https://api.cdnjs.com/libraries/"
+	baseLibNameURL = "https://api.cdnjs.com/libraries/"
 )
 
-// LibCommand is a command which returns specefic library info
+// LibCommand is a command which returns specific library info
 func LibCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore all messages created by the bot itself
 	if m.Author.ID == s.State.User.ID {
@@ -31,7 +31,7 @@ func LibCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
-		resp, err := http.Get(baseLibByNameURL + args[2])
+		resp, err := http.Get(baseLibNameURL + args[2])
 		h.HandleError(err)
 		defer resp.Body.Close()
 
@@ -59,7 +59,7 @@ func LibCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		cdnjsLink := "<" + "https://cdnjs.com/libraries/" + libName + ">"
 
 		libHeader := "🔎 *CDNJS LIB RESULTS*:\n"
-		libMessage :=
+		libMsg :=
 			"➡️ **Name**: " + libName + "\n" +
 				"🔖 **Version**: " + libVersion + "\n" +
 				"📜 **Description**: " + libDesc + "\n" +
@@ -72,6 +72,6 @@ func LibCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 				"🗂 **Source Code**: " + libSource + "\n" +
 				"📍 **Home Page**: " + libHomePage
 
-		s.ChannelMessageSend(m.ChannelID, libHeader+libMessage)
+		s.ChannelMessageSend(m.ChannelID, libHeader+libMsg)
 	}
 }

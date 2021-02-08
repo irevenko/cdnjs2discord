@@ -63,11 +63,11 @@ func AssetsCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		files := strings.Join(rawFiles[:], "\n")
 
 		assetsHeader := "🔎 *CDNJS ASSETS RESULTS*:\n"
-		assetsMessage :=
+		assetsMsg :=
 			"➡️ **Library**: " + specificLibVerResp.Name +
 				" ver " + specificLibVerResp.Version +
 				"\n🔗 **Assets Links**:\n" + files
 
-		s.ChannelMessageSend(m.ChannelID, assetsHeader+assetsMessage)
+		s.ChannelMessageSend(m.ChannelID, assetsHeader+assetsMsg)
 	}
 }

@@ -44,3 +44,10 @@ type SpecificLibVerResponse struct {
 	RawFiles []string `json:"rawFiles"`
 	Files    []string `json:"files"`
 }
+
+// SearchResponse - type for the types for the https://api.cdnjs.com/libraries/?search
+type SearchResponse struct {
+	Results []SpecificLibResponse `json:"results"`
+	Total int `json:"total"`
+	Available int `json:"available"`
+}
