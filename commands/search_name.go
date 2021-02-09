@@ -4,15 +4,17 @@ import (
 	h "../helpers"
 	t "../types"
 	"encoding/json"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 const (
 	baseSearchURL = "https://api.cdnjs.com/libraries/?search="
-	baseSearchParams = "&fields=description&limit=5"
+	searchNameParams = "&fields=description&limit=5"
 )
 
 // SearchNameCommand is a command which returns search results based on lib name
@@ -31,7 +33,7 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
-		resp, err := http.Get(baseSearchURL + args[3] + baseSearchParams)
+		resp, err := http.Get(baseSearchURL + args[3] + searchNameParams)
 		h.HandleError(err)
 		defer resp.Body.Close()
 
@@ -47,31 +49,34 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			return
 		}
 
+		var libraries []string
 
 		var libNames []string
 		var libDescriptions []string
-		var libAssets []string
 		var cdnjsLinks []string
 
-		for _, v := range searchResults {
-			libNames = append(libNames, v.Name)
+		for i, v := range searchResults {
+			libNames = append(libNames, strconv.Itoa(i + 1) + ") " + v.Name)
 			libDescriptions = append(libDescriptions, v.Description)
-			libAssets = append(libAssets, v.LatestLink)
-			cdnjsLinks = append(cdnjsLinks, baseLibNameURL + v.Name)
+			cdnjsLinks = append(cdnjsLinks, baseLibNameURL + v.Name +"\n")
 		}
 
-		//libName := strings.Join(libNames, "\n")
-		//libDesc := strings.Join(libDescriptions, "\n")
-		//libAssetLink := "<" + nameSearchResp.LatestLink + ">"
-		//cdnjsLink := "<" + "https://cdnjs.com/libraries/" + libName + ">"
+		for i, _ := range searchResults{
+			libraries = append(libraries, libNames[i])
+			libraries = append(libraries, libDescriptions[i])
+			libraries = append(libraries, cdnjsLinks[i])
+		}
 
-		//searchNameHeader := "🔎 *CDNJS NAME SEARCH RESULTS*:\n"
-		//searchNameMsg :=
-		//	"➡️ **Name**: " + libName + "\n" +
-		//		"📜 **Description**: " + libDesc + "\n" +
-		//		"🔗 **Asset Link**: " + libAssetLink + "\n" +
-		//		"⚓ **CDNJS Reference**: " + cdnjsLink + "\n"
 
-		s.ChannelMessageSend(m.ChannelID, strings.Join(libNames, "\n"))//searchNameHeader+searchNameMsg)
+		searchNameHeader := "🔎 *CDNJS NAME SEARCH RESULTS*:\n"
+		searchNameMsg := strings.Join(libraries, "\n")
+
+		msg, _ := s.ChannelMessageSend(m.ChannelID, searchNameHeader+searchNameMsg)
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "⏭")
+
+
+
+		fmt.Println(s.MessageReactions(msg.ChannelID, msg.ID, "⏭", 100, "1","2"))
+		//s.ChannelMessageEdit(msg.ChannelID, msg.ID, "check mate")
 	}
 }
