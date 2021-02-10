@@ -31,6 +31,8 @@ func main() {
 	dg.AddHandler(c.WhiteListCommand)
 	dg.AddHandler(c.SearchNameCommand)
 
+
+
 	dg.AddHandler(func(dg *discordgo.Session, ready *discordgo.Ready) {
 		err = dg.UpdateGameStatus(0, "!cdn")
 		if err != nil {

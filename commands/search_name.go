@@ -14,7 +14,7 @@ import (
 
 const (
 	baseSearchURL = "https://api.cdnjs.com/libraries/?search="
-	searchNameParams = "&fields=description&limit=5"
+	searchNameParams = "&fields=description&limit=20"
 )
 
 // SearchNameCommand is a command which returns search results based on lib name
@@ -67,16 +67,51 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			libraries = append(libraries, cdnjsLinks[i])
 		}
 
+		// 3 elems split
+		// clamp function
+
+		//firstPage := libraries[0:15]
+		//secondPage := libraries[15:30]
+		//thirdPage := libraries[30:45]
+		//fourthPage := libraries[45:60]
+
+		//fmt.Println(libraries[0:3])
+		//fmt.Println(firstPage)
+		//fmt.Println(secondPage)
+		//fmt.Println(thirdPage)
+		//fmt.Println(fourthPage)
+
+		fmt.Println(libraries)
 
 		searchNameHeader := "🔎 *CDNJS NAME SEARCH RESULTS*:\n"
-		searchNameMsg := strings.Join(libraries, "\n")
+		searchNameMsg := strings.Join(libraries[0:15], "\n")
 
-		msg, _ := s.ChannelMessageSend(m.ChannelID, searchNameHeader+searchNameMsg)
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "⏭")
+		msg, err := s.ChannelMessageSend(m.ChannelID, searchNameHeader+searchNameMsg)
+		h.HandleError(err)
 
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "1️⃣")
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "2️⃣")
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "3️⃣")
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "4️⃣")
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, "5️⃣")
 
-
-		fmt.Println(s.MessageReactions(msg.ChannelID, msg.ID, "⏭", 100, "1","2"))
-		//s.ChannelMessageEdit(msg.ChannelID, msg.ID, "check mate")
+		s.AddHandler(func (s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+			go func() {
+				switch r.Emoji.Name {
+				case "1️⃣":
+					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "1")
+				case "2️⃣":
+					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "2")
+				case "3️⃣":
+					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "3")
+				case "4️⃣":
+					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "4")
+				case "5️⃣":
+					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "5")
+				default:
+					s.ChannelMessageSend(m.ChannelID, "⛔ Reaction Error (use only pages reactions 1-5)")
+				}
+			}()
+		})
 	}
 }
