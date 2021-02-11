@@ -4,7 +4,6 @@ import (
 	h "../helpers"
 	t "../types"
 	"encoding/json"
-	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"net/http"
@@ -14,7 +13,7 @@ import (
 
 const (
 	baseSearchURL = "https://api.cdnjs.com/libraries/?search="
-	searchNameParams = "&fields=description&limit=20"
+	searchNameParams = "&fields=description&limit=25"
 )
 
 // SearchNameCommand is a command which returns search results based on lib name
@@ -57,8 +56,8 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		for i, v := range searchResults {
 			libNames = append(libNames, strconv.Itoa(i + 1) + ") " + v.Name)
-			libDescriptions = append(libDescriptions, v.Description)
-			cdnjsLinks = append(cdnjsLinks, baseLibNameURL + v.Name +"\n")
+			libDescriptions = append(libDescriptions, " "+v.Description)
+			cdnjsLinks = append(cdnjsLinks, "\n"+ baseLibNameURL + v.Name +"\n")
 		}
 
 		for i, _ := range searchResults{
@@ -67,49 +66,89 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			libraries = append(libraries, cdnjsLinks[i])
 		}
 
-		// 3 elems split
-		// clamp function
+		pages := h.SplitIntoPages(libraries, 15)
 
-		//firstPage := libraries[0:15]
-		//secondPage := libraries[15:30]
-		//thirdPage := libraries[30:45]
-		//fourthPage := libraries[45:60]
+		var firstPage []string
+		var secondPage []string
+		var thirdPage []string
+		var fourthPage []string
+		var fifthPage []string
 
-		//fmt.Println(libraries[0:3])
-		//fmt.Println(firstPage)
-		//fmt.Println(secondPage)
-		//fmt.Println(thirdPage)
-		//fmt.Println(fourthPage)
-
-		fmt.Println(libraries)
+		for i, v := range pages {
+			switch i {
+			case 0:
+				firstPage = append(firstPage, strings.Join(v, ""))
+			case 1:
+				secondPage = append(secondPage, strings.Join(v, ""))
+			case 2:
+				thirdPage = append(thirdPage, strings.Join(v, ""))
+			case 3:
+				fourthPage = append(fourthPage, strings.Join(v, ""))
+			case 4:
+				fifthPage = append(fifthPage, strings.Join(v, ""))
+			default:
+				break
+			}
+		}
 
 		searchNameHeader := "🔎 *CDNJS NAME SEARCH RESULTS*:\n"
-		searchNameMsg := strings.Join(libraries[0:15], "\n")
+		searchNameMsg := strings.Join(firstPage[:], "\n")
 
-		msg, err := s.ChannelMessageSend(m.ChannelID, searchNameHeader+searchNameMsg)
+		nameMsg, err := s.ChannelMessageSend(m.ChannelID, searchNameHeader+searchNameMsg)
 		h.HandleError(err)
 
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "1️⃣")
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "2️⃣")
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "3️⃣")
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "4️⃣")
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, "5️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "1️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "2️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "3️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "4️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "5️⃣")
+		s.MessageReactionAdd(nameMsg.ChannelID, nameMsg.ID, "😑")
 
 		s.AddHandler(func (s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 			go func() {
 				switch r.Emoji.Name {
 				case "1️⃣":
-					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "1")
+					if len(firstPage) != 0 {
+						if nameMsg.ID == r.MessageID {
+							s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, searchNameHeader + strings.Join(firstPage[:], "\n"))
+						}
+					} else {
+						s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, "⛔ Page Error (limit reached)")
+					}
 				case "2️⃣":
-					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "2")
+					if len(secondPage) != 0 {
+						if nameMsg.ID == r.MessageID {
+							s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, searchNameHeader+strings.Join(secondPage[:], "\n"))
+						}
+					} else {
+						s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, "⛔ Page Error (limit reached)")
+					}
 				case "3️⃣":
-					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "3")
+					if len(thirdPage) != 0 {
+						if nameMsg.ID == r.MessageID {
+							s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, searchNameHeader+strings.Join(thirdPage[:], "\n"))
+						}
+					} else {
+						s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, "⛔ Page Error (limit reached)")
+					}
 				case "4️⃣":
-					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "4")
+					if len(fourthPage) != 0 {
+						if nameMsg.ID == r.MessageID {
+							s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, searchNameHeader+strings.Join(fourthPage[:], "\n"))
+						}
+					} else {
+						s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, "⛔ Page Error (limit reached)")
+					}
 				case "5️⃣":
-					s.ChannelMessageEdit(msg.ChannelID, msg.ID, "5")
+					if len(fifthPage) != 0 {
+						if nameMsg.ID == r.MessageID {
+							s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, searchNameHeader+strings.Join(fifthPage[:], "\n"))
+						}
+					} else {
+						s.ChannelMessageEdit(nameMsg.ChannelID, nameMsg.ID, "⛔ Page Error (limit reached)")
+					}
 				default:
-					s.ChannelMessageSend(m.ChannelID, "⛔ Reaction Error (use only pages reactions 1-5)")
+					break
 				}
 			}()
 		})

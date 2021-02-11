@@ -30,7 +30,8 @@ func main() {
 	dg.AddHandler(c.AssetsCommand)
 	dg.AddHandler(c.WhiteListCommand)
 	dg.AddHandler(c.SearchNameCommand)
-
+	dg.AddHandler(c.SearchGitHubCommand)
+	dg.AddHandler(c.SearchKeyWordsCommand)
 
 
 	dg.AddHandler(func(dg *discordgo.Session, ready *discordgo.Ready) {
