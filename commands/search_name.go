@@ -56,8 +56,8 @@ func SearchNameCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		for i, v := range searchResults {
 			libNames = append(libNames, strconv.Itoa(i + 1) + ") " + v.Name)
-			libDescriptions = append(libDescriptions, " "+v.Description)
-			cdnjsLinks = append(cdnjsLinks, "\n"+ baseLibNameURL + v.Name +"\n")
+			libDescriptions = append(libDescriptions, " " + v.Description)
+			cdnjsLinks = append(cdnjsLinks, "\n" + baseLibNameURL + v.Name + "\n")
 		}
 
 		for i, _ := range searchResults{

@@ -2,7 +2,6 @@ package commands
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -33,7 +32,6 @@ func WhiteListCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		var whitelistResp t.WhiteListResponse
 		json.Unmarshal(body, &whitelistResp)
-		fmt.Println()
 
 		rawExtensions := whitelistResp.Categories
 
