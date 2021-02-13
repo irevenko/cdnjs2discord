@@ -2,7 +2,7 @@
 > A bridge between https://cdnjs.com/api and Discord
 
 Big shoutout to <a href="https://github.com/br1ght0ne">Br1ght0ne</a> for helping me with writing ```helpers.go/SplitIntoPages``` function on stream (https://twitch.tv/irevenko)<br>
-#### <a href="https://discord.com/oauth2/authorize?client_id=806461827776905237&scope=bot&permissions=85056">BOT INVITE LINK</a> 
+#### <a target="_blank" href="https://discord.com/oauth2/authorize?client_id=806461827776905237&scope=bot&permissions=85056">BOT INVITE LINK</a> 
 #### OR NAME: CDNJS Bot #5261
 
 ## Commands  📃
