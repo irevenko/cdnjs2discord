@@ -43,7 +43,7 @@ func SearchKeyWordsCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		searchResults := keywordsSearchResp.Results
 
 		if len(searchResults) == 0 {
-			s.ChannelMessageSend(m.ChannelID, "❌ Library **"+args[3]+"** not found!")
+			s.ChannelMessageSend(m.ChannelID, "❌ Key words **"+args[3]+"** not found!")
 			return
 		}
 
